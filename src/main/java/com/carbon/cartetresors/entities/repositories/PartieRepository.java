@@ -1,4 +1,8 @@
 package com.carbon.cartetresors.entities.repositories;
 
-public class PartieRepository {
+import com.carbon.cartetresors.entities.Carte;
+
+public interface PartieRepository {
+
+    Carte getCarte();
 }

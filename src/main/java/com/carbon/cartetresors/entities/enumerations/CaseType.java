@@ -1,7 +1,7 @@
 package com.carbon.cartetresors.entities.enumerations;
 
 public enum CaseType {
-    MONTAGNE("M"), TRESOR("T"), VIDE(".");
+    M("MONTAGNE"), T("TRESOR"), V(".");
 
     private final String name;
 
