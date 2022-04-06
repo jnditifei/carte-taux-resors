@@ -1,13 +1,14 @@
-package com.carbon.cartetresors.entities.repositories.implementations;
+package com.carbon.cartetresors.repositories.implementations;
 
 import com.carbon.cartetresors.entities.Aventurier;
 import com.carbon.cartetresors.entities.Carte;
 import com.carbon.cartetresors.entities.Case;
 import com.carbon.cartetresors.entities.enumerations.CaseType;
-import com.carbon.cartetresors.entities.repositories.PartieRepository;
-import com.carbon.cartetresors.entities.repositories.exceptions.InitException;
+import com.carbon.cartetresors.repositories.PartieRepository;
+import com.carbon.cartetresors.repositories.exceptions.InitException;
 import com.carbon.cartetresors.utils.FileProcessor;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,9 +19,9 @@ public class PartieRepositoryImplementation implements PartieRepository {
         this.fileProcessor = fileProcessor;
     }
     @Override
-    public Carte getCarte() throws InitException {
+    public Carte getCarte(String path) throws InitException {
 
-        List<String> lines = fileProcessor.read();
+        List<String> lines = fileProcessor.read(path);
         Carte carte  = build(lines);
         for(String line: lines){
             if(line.startsWith("M")){
@@ -35,10 +36,15 @@ public class PartieRepositoryImplementation implements PartieRepository {
     }
 
     @Override
-    public List<Aventurier> getAventuriers() {
-        return fileProcessor.read().stream().filter(l -> l.startsWith("A"))
+    public List<Aventurier> getAventuriers(String path) {
+        return fileProcessor.read(path).stream().filter(l -> l.startsWith("A"))
                 .map(a ->new Aventurier(a.split("-")))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void print(List<String> lines, String path) throws IOException {
+        fileProcessor.write(lines, path);
     }
 
     private Carte build(List<String> lines) throws InitException{
@@ -63,15 +69,15 @@ public class PartieRepositoryImplementation implements PartieRepository {
         return carte;
     }
 
-    void setMontagne(String line, Case[][] grille) {
+    private void setMontagne(String line, Case[][] grille) {
         String[] values = line.split("-");
         grille[Integer.parseInt(values[1])][Integer.parseInt(values[2])]= new Case(CaseType.M);
     }
-    void setTresor(String line, Case[][] grille) {
+    private void setTresor(String line, Case[][] grille) {
         String[] values = line.split("-");
         grille[Integer.parseInt(values[1])][Integer.parseInt(values[2])]= new Case(CaseType.T, values[3]);
     }
-    void setAventurier(String line, Case[][] grille) {
+    private void setAventurier(String line, Case[][] grille) {
         String[] values = line.split("-");
         grille[Integer.parseInt(values[2].trim())][Integer.parseInt(values[3].trim())].setAventurierPresent(true);
     }

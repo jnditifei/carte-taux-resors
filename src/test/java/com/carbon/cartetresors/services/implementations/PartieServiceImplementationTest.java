@@ -3,10 +3,8 @@ package com.carbon.cartetresors.services.implementations;
 import com.carbon.cartetresors.entities.*;
 import com.carbon.cartetresors.entities.enumerations.CaseType;
 import com.carbon.cartetresors.entities.enumerations.Orientation;
-import com.carbon.cartetresors.entities.repositories.exceptions.InitException;
-import com.carbon.cartetresors.entities.repositories.implementations.PartieRepositoryImplementation;
-import com.carbon.cartetresors.services.Exception.NotAuthorizedException;
-import com.carbon.cartetresors.services.PartieService;
+import com.carbon.cartetresors.repositories.exceptions.InitException;
+import com.carbon.cartetresors.repositories.implementations.PartieRepositoryImplementation;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,10 +12,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -49,9 +51,9 @@ public class PartieServiceImplementationTest {
 
     @Test
     public void creerPartie() throws InitException {
-        when(partieRepositoryImplementation.getAventuriers()).thenReturn(aventuriers);
-        when(partieRepositoryImplementation.getCarte()).thenReturn(carte);
-        assertEquals(partie, partieService.creerPartie());
+        when(partieRepositoryImplementation.getAventuriers(anyString())).thenReturn(aventuriers);
+        when(partieRepositoryImplementation.getCarte(anyString())).thenReturn(carte);
+        assertEquals(partie, partieService.creerPartie(""));
     }
 
     @Test
@@ -70,5 +72,11 @@ public class PartieServiceImplementationTest {
         Aventurier aventurier = new Aventurier("Indiana",2,2, Orientation.S,"AADADAGGA");
         partie.getAventuriers().add(aventurier);
         assertEquals(new Position(1,3), partieService.jouerPartie(partie).getAventuriers().get(1).getPosition());
+    }
+
+    @Test
+    public void imprimerPartie() throws IOException {
+        doNothing().when(partieRepositoryImplementation).print(any(), anyString());
+        assertEquals("C-3-4", partieService.imprimerPartie(partie, "").get(0));
     }
 }

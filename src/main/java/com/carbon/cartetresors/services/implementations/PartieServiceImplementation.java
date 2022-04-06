@@ -1,10 +1,15 @@
 package com.carbon.cartetresors.services.implementations;
 
 import com.carbon.cartetresors.entities.*;
-import com.carbon.cartetresors.entities.repositories.PartieRepository;
-import com.carbon.cartetresors.entities.repositories.exceptions.InitException;
+import com.carbon.cartetresors.repositories.PartieRepository;
+import com.carbon.cartetresors.repositories.exceptions.InitException;
 import com.carbon.cartetresors.services.Exception.NotAuthorizedException;
 import com.carbon.cartetresors.services.PartieService;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PartieServiceImplementation implements PartieService {
 
@@ -16,14 +21,26 @@ public class PartieServiceImplementation implements PartieService {
     }
 
     @Override
-    public Partie creerPartie() throws InitException {
-        return new Partie(partieRepository.getAventuriers(), partieRepository.getCarte());
+    public Partie creerPartie(String path) throws InitException {
+        return new Partie(partieRepository.getAventuriers(path), partieRepository.getCarte(path));
     }
 
     @Override
     public Partie jouerPartie(Partie partie) {
         partie.getAventuriers().forEach(a->executer(a, partie.getCarte()));
         return partie;
+    }
+
+    @Override
+    public List<String> imprimerPartie(Partie partie, String path) throws IOException {
+        List<String> lines = new ArrayList<>();
+        Case[][] grille = partie.getCarte().getGrille();
+        String firstLine = String.format("C-%d-%d", grille.length, grille[0].length);
+        lines.add(firstLine);
+        lines.addAll(setCarte(grille));
+        lines.addAll(partie.getAventuriers().stream().map( a -> setAventurier(a)).collect(Collectors.toList()));
+        partieRepository.print(lines, path);
+        return lines;
     }
 
     private void executer(Aventurier aventurier, Carte carte)  {
@@ -87,6 +104,27 @@ public class PartieServiceImplementation implements PartieService {
                 break;
         }
         return nouvellePosition;
+    }
+
+    private List<String> setCarte(Case[][] grille) {
+        List<String> lines = new ArrayList<>();
+        for (int row = 0; row < grille.length; row++) {
+            for (int col = 0; col < grille[row].length; col++) {
+                if(grille[row][col].getCaseType().getName().equals("TRESOR")){
+                    String s = String.format("T-%d-%d-%d", row, col, grille[row][col].getTresor());
+                    lines.add(s);
+                }else if(grille[row][col].getCaseType().getName().equals("MONTAGNE")) {
+                    String s = String.format("M-%d-%d",row, col);
+                    lines.add(s);
+                }
+            }
+        }
+        return lines;
+    }
+
+    private String setAventurier(Aventurier aventurier){
+        return String.format("A-%s-%d-%d-%s-%d", aventurier.getNom(), aventurier.getPosition().getAxeX(), aventurier.getPosition().getAxeY(),
+                aventurier.getOrientation().getName(),aventurier.getNombretresor());
     }
 
 }

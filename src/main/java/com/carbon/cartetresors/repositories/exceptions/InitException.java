@@ -1,4 +1,4 @@
-package com.carbon.cartetresors.entities.repositories.exceptions;
+package com.carbon.cartetresors.repositories.exceptions;
 
 public class InitException extends Exception {
     public InitException(String message){
