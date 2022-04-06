@@ -34,7 +34,7 @@ public class FileProcessor {
             File file = new File(path);
             fileWriter = new FileWriter(file);
             for(String line: lines){
-                fileWriter.write(line);
+                fileWriter.write(line+"\n");
             }
         }catch (IOException e){
             e.printStackTrace();
