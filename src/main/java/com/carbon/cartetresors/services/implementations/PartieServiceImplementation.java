@@ -123,7 +123,7 @@ public class PartieServiceImplementation implements PartieService {
     }
 
     private String setAventurier(Aventurier aventurier){
-        return String.format("A-%s-%d-%d-%s-%d", aventurier.getNom(), aventurier.getPosition().getAxeX(), aventurier.getPosition().getAxeY(),
+        return String.format("A - %s - %d - %d - %s - %d", aventurier.getNom(), aventurier.getPosition().getAxeX(), aventurier.getPosition().getAxeY(),
                 aventurier.getOrientation().getName(),aventurier.getNombretresor());
     }
 

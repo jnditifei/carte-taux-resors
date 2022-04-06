@@ -3,5 +3,4 @@ T-0-3-0
 M-1-0
 T-1-3-2
 M-2-1
-A-Lara-0-1-SUD-0
-A-Indiana-0-3-SUD-3
+A - Lara - 0 - 3 - SUD - 3

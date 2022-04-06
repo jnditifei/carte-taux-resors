@@ -1,5 +1,6 @@
 package com.carbon.cartetresors;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.carbon.cartetresors.entities.Partie;
@@ -22,10 +23,13 @@ public class AppTest
     private PartieRepository partieRepository = new PartieRepositoryImplementation(fileProcessor);
     private PartieService partieService = new PartieServiceImplementation(partieRepository);
     private Partie partie;
+    private String inputFile = "src/test/resources/file.txt";
+    private String outputFile = "src/test/resources/output.txt";
+
     @Test
     public void shouldAnswerWithTrue() throws InitException, IOException {
-        partie = partieService.creerPartie("src/test/resources/file.txt");
+        partie = partieService.creerPartie(inputFile);
         partie =  partieService.jouerPartie(partie);
-        partieService.imprimerPartie(partie, "src/test/resources/output.txt");
+        assertEquals(6,partieService.imprimerPartie(partie, outputFile).size());
     }
 }
