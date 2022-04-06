@@ -1,10 +1,13 @@
 package com.carbon.cartetresors.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
-@Getter
+@Getter@ToString
+@EqualsAndHashCode
 public class Partie {
     private List<Aventurier> aventuriers;
     private Carte carte;

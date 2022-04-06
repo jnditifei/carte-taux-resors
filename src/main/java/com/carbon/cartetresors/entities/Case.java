@@ -1,9 +1,12 @@
 package com.carbon.cartetresors.entities;
 
 import com.carbon.cartetresors.entities.enumerations.CaseType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
-@Getter
+@Getter@ToString
+@EqualsAndHashCode
 public class Case {
     private CaseType caseType;
     private int tresor;

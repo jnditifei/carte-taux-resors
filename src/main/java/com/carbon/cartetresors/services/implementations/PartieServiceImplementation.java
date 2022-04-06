@@ -2,6 +2,7 @@ package com.carbon.cartetresors.services.implementations;
 
 import com.carbon.cartetresors.entities.*;
 import com.carbon.cartetresors.entities.repositories.PartieRepository;
+import com.carbon.cartetresors.entities.repositories.exceptions.InitException;
 import com.carbon.cartetresors.services.Exception.NotAuthorizedException;
 import com.carbon.cartetresors.services.PartieService;
 
@@ -15,8 +16,8 @@ public class PartieServiceImplementation implements PartieService {
     }
 
     @Override
-    public Partie creerPartie() {
-        return null;
+    public Partie creerPartie() throws InitException {
+        return new Partie(partieRepository.getAventuriers(), partieRepository.getCarte());
     }
 
     @Override
@@ -51,14 +52,15 @@ public class PartieServiceImplementation implements PartieService {
         int axeY = nouvellePosition.getAxeY();
         try {
             Case land = carte.getGrille()[axeX][axeY];
-            if (land.getCaseType().getName().equals("T") && land.getTresor() > 0) {
+            if (land.getCaseType().getName().equals("TRESOR") && land.getTresor() > 0) {
                 carte.getGrille()[axeX][axeY].decrementTresor();
                 aventurier.ramassertresor();
-            }else if (land.getCaseType().getName().equals("MONTAGE") || land.isAventurierPresent()) {
-                throw new NotAuthorizedException("La montagne ne peut être franchie");
+            }else if (land.getCaseType().getName().equals("MONTAGNE") || land.isAventurierPresent()) {
+                throw new NotAuthorizedException("Cette case est inaccessible");
             }
             carte.deplacer(aventurier.getPosition(), axeX, axeY);
             aventurier.avancer(axeX, axeY);
+
         }catch (ArrayIndexOutOfBoundsException e) {
             throw new NotAuthorizedException("Case hors limite de la grille");
         }

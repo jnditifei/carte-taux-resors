@@ -3,10 +3,11 @@ package com.carbon.cartetresors.entities;
 import com.carbon.cartetresors.entities.enumerations.Orientation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
-@EqualsAndHashCode@ToString@Getter
+@EqualsAndHashCode
+@ToString
+@Getter
 public class Aventurier {
     private String nom;
     private Position position;
@@ -15,9 +16,9 @@ public class Aventurier {
     private int nombretresor;
 
     public Aventurier(String[] line) {
-        this.nom = line[1];
-        this.position= new Position(Integer.parseInt(line[2]),Integer.parseInt(line[3]));
-        this.orientation = Orientation.valueOf(line[4]);
+        this.nom = line[1].trim();
+        this.position= new Position(Integer.parseInt(line[2].trim()),Integer.parseInt(line[3].trim()));
+        this.orientation = Orientation.valueOf(line[4].trim());
         this.mouvements = line[5].trim().toCharArray();
     }
 

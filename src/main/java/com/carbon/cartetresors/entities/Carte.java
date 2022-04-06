@@ -1,8 +1,12 @@
 package com.carbon.cartetresors.entities;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
+@EqualsAndHashCode
 public class Carte {
     private Case[][] grille;
     public Carte(String largeur, String hauteur) {
